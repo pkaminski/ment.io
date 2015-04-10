@@ -702,14 +702,16 @@ angular.module('mentio')
                 selectionEl.css({
                     top: coordinates.top + 'px',
                     left: coordinates.left + 'px',
-                    position: 'absolute',
+                    position: coordinates.position,
                     zIndex: 100,
                     display: 'block'
                 });
 
-                $timeout(function(){
-                    scrollIntoView(ctx, selectionEl);
-                },0);
+                if (coordinates.position === 'absolute') {
+                    $timeout(function(){
+                        scrollIntoView(ctx, selectionEl);
+                    },0);
+                }
             } else {
                 selectionEl.css({
                     display: 'none'
@@ -855,7 +857,7 @@ angular.module('mentio')
         }
 
         // public
-        function replaceTriggerText (ctx, targetElement, path, offset, triggerCharSet, 
+        function replaceTriggerText (ctx, targetElement, path, offset, triggerCharSet,
                 text, requireLeadingSpace, hasTrailingSpace) {
             resetSelection(ctx, targetElement, path, offset);
 
@@ -978,7 +980,7 @@ angular.module('mentio')
         // public
         function getTriggerInfo (ctx, triggerCharSet, requireLeadingSpace, menuAlreadyActive, hasTrailingSpace) {
             /*jshint maxcomplexity:11 */
-            // yes this function needs refactoring 
+            // yes this function needs refactoring
             var selected, path, offset;
             if (selectedElementIsTextAreaOrInput(ctx)) {
                 selected = getDocument(ctx).activeElement;
@@ -1113,6 +1115,7 @@ angular.module('mentio')
         }
 
         function localToGlobalCoordinates(ctx, element, coordinates) {
+            coordinates.position = 'absolute';
             var obj = element;
             var iframe = ctx ? ctx.iframe : null;
             while(obj) {
@@ -1122,12 +1125,16 @@ angular.module('mentio')
                     coordinates.top -= obj.scrollTop;
                     coordinates.left -= obj.scrollLeft;
                 }
+                if (coordinates.position !== 'fixed') {
+                    var style = window.getComputedStyle ? getComputedStyle(obj) : obj.currentStyle;
+                    if (style.position === 'fixed') coordinates.position = 'fixed';
+                }
                 obj = obj.offsetParent;
                 if (!obj && iframe) {
                     obj = iframe;
                     iframe = null;
                 }
-            }            
+            }
         }
 
         function getTextAreaOrInputUnderlinePosition (ctx, element, position) {
