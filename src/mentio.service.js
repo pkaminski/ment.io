@@ -322,9 +322,12 @@ angular.module('mentio')
                     if (requireLeadingSpace) {
                         idx = Math.max(
                             effectiveRange.lastIndexOf(' ' + c),
-                            effectiveRange.lastIndexOf('\xA0' + c),
-                            effectiveRange && effectiveRange.charAt(0) === c ? 0 : -1
-                        );
+                            effectiveRange.lastIndexOf('\xA0' + c));
+                        if (idx < 0) {
+                            idx = effectiveRange && effectiveRange.charAt(0) === c ? 0 : -1;
+                        } else {
+                            idx++;
+                        }
                     } else {
                         idx = effectiveRange.lastIndexOf(c);
                     }
