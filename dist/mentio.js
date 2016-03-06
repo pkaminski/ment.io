@@ -79,6 +79,7 @@ angular.module('mentio', [])
                 $scope.replaceText = function (text, hasTrailingSpace) {
                     $scope.hideAll();
 
+                    if (!($scope.targetElement instanceof Node)) return;
                     mentioUtil.replaceTriggerText($scope.context(), $scope.targetElement, $scope.targetElementPath,
                         $scope.targetElementSelectedOffset, $scope.triggerCharSet, text, $scope.requireLeadingSpace,
                         hasTrailingSpace);
