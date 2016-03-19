@@ -450,7 +450,7 @@ angular.module('mentio')
             }
             obj = element;
             iframe = ctx ? ctx.iframe : null;
-            while(obj !== getDocument().body) {
+            while(obj && obj !== getDocument().body) {
                 if (obj.scrollTop && obj.scrollTop > 0) {
                     coordinates.top -= obj.scrollTop;
                 }
