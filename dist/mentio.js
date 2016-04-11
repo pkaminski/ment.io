@@ -1141,7 +1141,7 @@ angular.module('mentio')
                 if (obj.scrollLeft && obj.scrollLeft > 0) {
                     coordinates.left -= obj.scrollLeft;
                 }
-                if (coordinates.position !== 'fixed') {
+                if (coordinates.position !== 'fixed' && obj.nodeType === Node.ELEMENT_NODE) {
                     var style = window.getComputedStyle ? getComputedStyle(obj) : obj.currentStyle;
                     if (style.position === 'fixed') coordinates.position = 'fixed';
                 }
