@@ -11,6 +11,7 @@ angular.module('mentio', [])
                 select: '&mentioSelect',
                 items: '=mentioItems',
                 typedTerm: '=mentioTypedTerm',
+                id: '@',
                 altId: '=mentioId',
                 iframeElement: '=mentioIframeElement',
                 requireLeadingSpace: '=mentioRequireLeadingSpace',
@@ -177,12 +178,12 @@ angular.module('mentio', [])
                 $scope.$on(
                     'menuCreated', function (event, data) {
                         if (
-                            $attrs.id !== undefined ||
+                            $scope.id !== undefined ||
                             $attrs.mentioId !== undefined
                         )
                         {
                             if (
-                                $attrs.id === data.targetElement ||
+                                $scope.id === data.targetElement ||
                                 (
                                     $attrs.mentioId !== undefined &&
                                     $scope.altId === data.targetElement
