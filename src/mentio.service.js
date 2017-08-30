@@ -22,7 +22,7 @@ angular.module('mentio')
                     top: coordinates.top + 'px',
                     left: coordinates.left + 'px',
                     position: coordinates.position,
-                    zIndex: 100,
+                    zIndex: 10000,
                     display: 'block'
                 });
 
@@ -440,17 +440,28 @@ angular.module('mentio')
             var obj = element;
             var iframe = ctx ? ctx.iframe : null;
             while(obj) {
-                coordinates.left += obj.offsetLeft;
-                coordinates.top += obj.offsetTop;
-                if (obj !== getDocument().body) {
+                coordinates.left += obj.offsetLeft + obj.clientLeft;
+                coordinates.top += obj.offsetTop + obj.clientTop;
+                obj = obj.offsetParent;
+                if (!obj && iframe) {
+                    obj = iframe;
+                    iframe = null;
+                }
+            }
+            obj = element;
+            iframe = ctx ? ctx.iframe : null;
+            while(obj && obj !== getDocument().body) {
+                if (obj.scrollTop && obj.scrollTop > 0) {
                     coordinates.top -= obj.scrollTop;
+                }
+                if (obj.scrollLeft && obj.scrollLeft > 0) {
                     coordinates.left -= obj.scrollLeft;
                 }
-                if (coordinates.position !== 'fixed') {
+                if (coordinates.position !== 'fixed' && obj.nodeType === Node.ELEMENT_NODE) {
                     var style = window.getComputedStyle ? getComputedStyle(obj) : obj.currentStyle;
                     if (style.position === 'fixed') coordinates.position = 'fixed';
                 }
-                obj = obj.offsetParent;
+                obj = obj.parentNode;
                 if (!obj && iframe) {
                     obj = iframe;
                     iframe = null;
