@@ -185,7 +185,7 @@ angular.module('mentio')
             if (mentionInfo !== undefined) {
                 if (selectedElementIsTextAreaOrInput()) {
                     var myField = getDocument(ctx).activeElement;
-                    text = text + ' ';
+                    if (text.charAt(text.length - 1) !== ':') text = text + ' ';
                     var startPos = mentionInfo.mentionPosition;
                     var endPos = mentionInfo.mentionPosition + mentionInfo.mentionText.length + 1;
                     myField.value = myField.value.substring(0, startPos) + text +
@@ -194,7 +194,7 @@ angular.module('mentio')
                     myField.selectionEnd = startPos + text.length;
                 } else {
                     // add a space to the end of the pasted text
-                    text = text + '\xA0';
+                    if (text.charAt(text.length - 1) !== ':') text = text + '\xA0';
                     pasteHtml(ctx, text, mentionInfo.mentionPosition,
                             mentionInfo.mentionPosition + mentionInfo.mentionText.length + 1);
                 }
